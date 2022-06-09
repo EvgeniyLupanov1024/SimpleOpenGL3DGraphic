@@ -16,15 +16,14 @@ int main()
 {
     init();
 
-    GLfloat illuminati_vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.0f,  0.5f, 0.0f
-    };
-
     while(!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
+
+        glClearColor(0.91f, 0.85f, 0.73f, 1.0f);
+        glClear(GL_COLOR_BUFFER_BIT);
+        
+        glfwSwapBuffers(window);
     }
 
     glfwTerminate();
@@ -34,6 +33,7 @@ int main()
 void init() 
 {
     glfwInit();
+
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -45,6 +45,7 @@ void init()
         glfwTerminate();
         std::exit;
     }
+    glfwMakeContextCurrent(window);
 
     glViewport(0, 0, width, height);
     glfwSetKeyCallback(window, key_callback);
