@@ -4,7 +4,7 @@ all: ${OUT_NAME}
 	./${OUT_NAME}
 
 ${OUT_NAME}: window.o
-	g++ window.o -o ${OUT_NAME} -Wall -lGL -lglfw -lpthread
+	g++ window.o -o ${OUT_NAME} -Wall -lGLEW -lGL -lglfw -lpthread
 
 window.o: window.cpp
 	g++ -c window.cpp
