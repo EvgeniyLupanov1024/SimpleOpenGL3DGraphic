@@ -6,6 +6,8 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include "shader.h"
+
 using namespace std;
 
 void init();
@@ -22,38 +24,11 @@ GLfloat g_vertex_illuminati[] = {
     0.0f,  0.5f, 0.0f,
 };
 
-GLchar* vertexShaderSource = (GLchar*) "#version 330 core\n"
-    "layout (location = 0) in vec3 position;\n"
-    "void main()\n"
-    "{\n"
-    "gl_Position = vec4(position.x, position.y, position.z, 1.0);\n"
-    "}\0";
-GLchar* fragmentShaderSource = (GLchar*) "#version 330 core\n"
-    "out vec4 color;\n"
-    "void main()\n"
-    "{\n"
-    "color = vec4(0.35f, 0.5f, 0.25f, 1.0f);\n"
-    "}\n\0";
-
 int main()
 {
     init();
 
-    GLuint vertexShader;
-    vertexShader = glCreateShader(GL_VERTEX_SHADER);
-    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-    glCompileShader(vertexShader);
-
-    GLuint fragmentShader;
-    fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-    glCompileShader(fragmentShader);
-
-    GLuint shaderProgram;
-    shaderProgram = glCreateProgram();
-    glAttachShader(shaderProgram, vertexShader);
-    glAttachShader(shaderProgram, fragmentShader);
-    glLinkProgram(shaderProgram);
+    Shader ShProxy = Shader("proxy.vert", "proxy.frag");
 
     GLuint VAO; 
     glGenVertexArrays(1, &VAO);
@@ -74,7 +49,7 @@ int main()
         glClearColor(0.91f, 0.85f, 0.73f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        glUseProgram(shaderProgram);
+        ShProxy.use();
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glfwSwapBuffers(window);
@@ -97,7 +72,7 @@ void init()
 
     window = glfwCreateWindow(width, height, title, nullptr, nullptr);
     if (window == nullptr) {
-        throw runtime_error("Failed to create GLFW window" );
+        throw runtime_error("Failed to create GLFW window");
     }
     glfwMakeContextCurrent(window);
 
