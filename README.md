@@ -4,9 +4,11 @@
 
 - GLFW
 - GLEW
+- GLM
 ```
 sudo apt-get update ;\
-sudo apt-get install libglew-dev ;\
-sudo apt-get install libglfw3 ;\
-sudo apt-get install libglfw3-dev
+sudo apt-get install -y libglew-dev ;\
+sudo apt-get install -y libglfw3 ;\
+sudo apt-get install -y libglfw3-dev ;\
+sudo apt install -y libglm-dev
 ```

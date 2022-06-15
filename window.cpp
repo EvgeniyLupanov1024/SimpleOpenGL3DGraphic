@@ -6,6 +6,11 @@
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
+
 #include "shader.h"
 
 using namespace std;
@@ -15,17 +20,44 @@ void fillScene();
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
 GLFWwindow* window;
-int width = 1000;
-int height = 600;
+int screenWidth = 1000;
+int screenHeight = 600;
 char title[] = "Potitle";
 
 int main()
 {
     init();
 
-    Shader ShProxy = Shader("proxy.vert", "proxy.frag");
+    Shader shProxy = Shader("proxy.vert", "proxy.frag");
 
     fillScene();
+
+    GLint modelLoc = glGetUniformLocation(shProxy.Program, "model");
+    GLint viewLoc = glGetUniformLocation(shProxy.Program, "view");
+    GLint projLoc = glGetUniformLocation(shProxy.Program, "projection");
+
+    float modelMat[16] = {
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+    };
+    float viewMat[16] = {
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+    };
+    float projMat[16] = {
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+    };
+
+    glm::mat4 model = glm::make_mat4(modelMat);
+    glm::mat4 view = glm::make_mat4(modelMat);
+    glm::mat4 projection = glm::make_mat4(modelMat);
 
     while(!glfwWindowShouldClose(window))
     {
@@ -34,7 +66,12 @@ int main()
         glClearColor(0.91f, 0.85f, 0.73f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
-        ShProxy.use();
+        shProxy.use();
+
+        glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+        glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
+
         glDrawArrays(GL_TRIANGLES, 0, 3);
 
         glfwSwapBuffers(window);
@@ -55,13 +92,13 @@ void init()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-    window = glfwCreateWindow(width, height, title, nullptr, nullptr);
+    window = glfwCreateWindow(screenWidth, screenHeight, title, nullptr, nullptr);
     if (window == nullptr) {
         throw runtime_error("Failed to create GLFW window");
     }
     glfwMakeContextCurrent(window);
 
-    glViewport(0, 0, width, height);
+    glViewport(0, 0, screenWidth, screenHeight);
     glfwSetKeyCallback(window, key_callback);
 
     glewExperimental = GL_TRUE;
