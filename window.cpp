@@ -11,6 +11,7 @@
 using namespace std;
 
 void init();
+void fillScene();
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
 GLFWwindow* window;
@@ -18,29 +19,13 @@ int width = 1000;
 int height = 600;
 char title[] = "Potitle";
 
-GLfloat g_vertex_illuminati[] = {
-    -0.3f, -0.5f, 0.0f,
-    0.3f, -0.5f, 0.0f,
-    0.0f,  0.5f, 0.0f,
-};
-
 int main()
 {
     init();
 
     Shader ShProxy = Shader("proxy.vert", "proxy.frag");
 
-    GLuint VAO; 
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-
-    GLuint VBO;
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO); 
-
-    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_illuminati), g_vertex_illuminati, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
-    glEnableVertexAttribArray(0);
+    fillScene();
 
     while(!glfwWindowShouldClose(window))
     {
@@ -85,12 +70,32 @@ void init()
     }
 }
 
+void fillScene()
+{
+    GLfloat g_vertex_illuminati[] = {
+        -0.3f, -0.5f, 0.0f,
+        0.3f, -0.5f, 0.0f,
+        0.0f,  0.5f, 0.0f,
+    };
+
+    GLuint VAO; 
+    glGenVertexArrays(1, &VAO);
+    glBindVertexArray(VAO);
+
+    GLuint VBO;
+    glGenBuffers(1, &VBO);
+    glBindBuffer(GL_ARRAY_BUFFER, VBO); 
+
+    glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_illuminati), g_vertex_illuminati, GL_STATIC_DRAW);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+    glEnableVertexAttribArray(0);
+}
+
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
     switch (key)
     {
         case GLFW_KEY_ESCAPE:
             glfwSetWindowShouldClose(window, GL_TRUE);
-            break;
     }
 }
