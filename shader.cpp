@@ -60,12 +60,12 @@ void Shader::linkShaderProgram()
 
     GLint success;
     GLchar infoLog[512];
-    glGetShaderiv(Program, GL_COMPILE_STATUS, &success);
+    glGetProgramiv(Program, GL_LINK_STATUS, &success);
 
     if(!success)
     {
-        glGetShaderInfoLog(Program, 512, NULL, infoLog);
-        cout << "ERROR::SHADER::VERTEX::COMPILATION_FAILED\n" << endl;
+        glGetProgramInfoLog(Program, 512, NULL, infoLog);
+        cout << "ERROR::SHADER::VERTEX::LINKING_FAILED\n" << endl;
         throw runtime_error (infoLog);
     };
 }
