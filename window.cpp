@@ -36,28 +36,9 @@ int main()
     GLint viewLoc = glGetUniformLocation(shProxy.Program, "view");
     GLint projLoc = glGetUniformLocation(shProxy.Program, "projection");
 
-    float modelMat[16] = {
-        1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 0, 1
-    };
-    float viewMat[16] = {
-        1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 0, 1
-    };
-    float projMat[16] = {
-        1, 0, 0, 0,
-        0, 1, 0, 0,
-        0, 0, 1, 0,
-        0, 0, 0, 1
-    };
-
-    glm::mat4 model = glm::make_mat4(modelMat);
-    glm::mat4 view = glm::make_mat4(modelMat);
-    glm::mat4 projection = glm::make_mat4(modelMat);
+    glm::mat4 model = glm::mat4(1.f);
+    glm::mat4 view = glm::translate(glm::mat4(1.f), glm::vec3(0.5f, -0.5f, 0.0f));
+    glm::mat4 projection = glm::rotate(glm::mat4(1.f), glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
 
     while(!glfwWindowShouldClose(window))
     {
