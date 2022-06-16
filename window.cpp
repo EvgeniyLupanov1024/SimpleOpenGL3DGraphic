@@ -54,7 +54,7 @@ int main()
         glfwPollEvents();
 
         glClearColor(0.91f, 0.85f, 0.73f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shProxy.use();
 
@@ -97,34 +97,36 @@ void init()
     if (glewInit() != GLEW_OK) {
         throw runtime_error("GLEW not init");
     }
+
+    glEnable(GL_DEPTH_TEST);
 }
 
 void fillScene()
 {
     GLfloat g_vertex_illuminati[] = {
-        -0.5f, -0.5f, 0.0f,
-        0.0f, 0.0f, 0.6f,
-        0.5f, -0.5f, 0.0f,
+        -0.5f,  -0.5f,  0.0f,   0.5f,   0.2f,   0.3f,
+        0.0f,   0.0f,   0.6f,   0.5f,   0.2f,   0.3f,
+        0.5f,   -0.5f,  0.0f,   0.5f,   0.2f,   0.3f,
 
-        0.5f, -0.5f, 0.0f,
-        0.0f, 0.0f, 0.6f,
-        0.5f, 0.5f, 0.0f,
+        0.5f,   -0.5f,  0.0f,   0.9f,   0.6f,   0.3f,
+        0.0f,   0.0f,   0.6f,   0.9f,   0.6f,   0.3f,
+        0.5f,   0.5f,   0.0f,   0.9f,   0.6f,   0.3f,
 
-        0.5f, 0.5f, 0.0f,
-        0.0f, 0.0f, 0.6f,
-        -0.5f, 0.5f, 0.0f,
+        0.5f,   0.5f,   0.0f,   0.3f,   0.6f,   0.4f,
+        0.0f,   0.0f,   0.6f,   0.3f,   0.6f,   0.4f,
+        -0.5f,  0.5f,   0.0f,   0.3f,   0.6f,   0.4f,
 
-        -0.5f, 0.5f, 0.0f,
-        0.0f, 0.0f, 0.6f,
-        -0.5f, -0.5f, 0.0f,
+        -0.5f,  0.5f,   0.0f,   0.7f,   0.8f,   0.4f,
+        0.0f,   0.0f,   0.6f,   0.7f,   0.8f,   0.4f,
+        -0.5f,  -0.5f,  0.0f,   0.7f,   0.8f,   0.4f,
 
-        -0.5f, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.5f, 0.5f, 0.0f,
+        -0.5f,  -0.5f,  0.0f,   0.5f,   0.2f,   0.9f,
+        0.5f,   -0.5f,  0.0f,   0.5f,   0.2f,   0.9f,
+        0.5f,   0.5f,   0.0f,   0.5f,   0.2f,   0.9f,
 
-        -0.5f, -0.5f, 0.0f,
-        -0.5f, 0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
+        -0.5f,  -0.5f,  0.0f,   0.5f,   0.2f,   0.9f,
+        -0.5f,  0.5f,   0.0f,   0.5f,   0.2f,   0.9f,
+        0.5f,   0.5f,   0.0f,   0.5f,   0.2f,   0.9f,
     };
 
     GLuint VAO; 
@@ -136,8 +138,12 @@ void fillScene()
     glBindBuffer(GL_ARRAY_BUFFER, VBO); 
 
     glBufferData(GL_ARRAY_BUFFER, sizeof(g_vertex_illuminati), g_vertex_illuminati, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
 }
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
