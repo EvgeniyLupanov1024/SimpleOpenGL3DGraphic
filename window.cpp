@@ -20,8 +20,8 @@ void fillScene();
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
 GLFWwindow* window;
-int screenWidth = 1000;
-int screenHeight = 600;
+int screenWidth = 700;
+int screenHeight = 700;
 char title[] = "Potitle";
 
 int main()
@@ -36,9 +36,18 @@ int main()
     GLint viewLoc = glGetUniformLocation(shProxy.Program, "view");
     GLint projLoc = glGetUniformLocation(shProxy.Program, "projection");
 
-    glm::mat4 model = glm::mat4(1.f);
-    glm::mat4 view = glm::translate(glm::mat4(1.f), glm::vec3(0.5f, -0.5f, 0.0f));
-    glm::mat4 projection = glm::rotate(glm::mat4(1.f), glm::radians(90.0f), glm::vec3(0.0f, 0.0f, 1.0f));
+    // glm::mat4 model = glm::mat4(1.f);
+    glm::mat4 model = glm::rotate(glm::mat4(1.f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
+
+    glm::mat4 view = glm::translate(glm::mat4(1.f), glm::vec3(0.0f, 0.0f, 0.0f));
+    
+    glm::mat4 projection = glm::mat4(1.f);
+    // glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f, 0.1f, 100.0f );
+    // glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)screenWidth/(float)screenHeight, 1.0f, 1000.0f);
+
+    cout << glm::to_string(model) << endl << endl;
+    cout << glm::to_string(view) << endl << endl;
+    cout << glm::to_string(projection) << endl << endl;
 
     while(!glfwWindowShouldClose(window))
     {
@@ -49,11 +58,13 @@ int main()
 
         shProxy.use();
 
+        model = glm::rotate(glm::mat4(1.f), (GLfloat)glfwGetTime() * 1.f, glm::vec3(1.0f, 0.7f, 0.3f));
+
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        
+        glDrawArrays(GL_TRIANGLES, 0, 18);
 
         glfwSwapBuffers(window);
     }
@@ -91,9 +102,29 @@ void init()
 void fillScene()
 {
     GLfloat g_vertex_illuminati[] = {
-        -0.3f, -0.5f, 0.0f,
-        0.3f, -0.5f, 0.0f,
-        0.0f,  0.5f, 0.0f,
+        -0.5f, -0.5f, 0.0f,
+        0.0f, 0.0f, 0.6f,
+        0.5f, -0.5f, 0.0f,
+
+        0.5f, -0.5f, 0.0f,
+        0.0f, 0.0f, 0.6f,
+        0.5f, 0.5f, 0.0f,
+
+        0.5f, 0.5f, 0.0f,
+        0.0f, 0.0f, 0.6f,
+        -0.5f, 0.5f, 0.0f,
+
+        -0.5f, 0.5f, 0.0f,
+        0.0f, 0.0f, 0.6f,
+        -0.5f, -0.5f, 0.0f,
+
+        -0.5f, -0.5f, 0.0f,
+        0.5f, -0.5f, 0.0f,
+        0.5f, 0.5f, 0.0f,
+
+        -0.5f, -0.5f, 0.0f,
+        -0.5f, 0.5f, 0.0f,
+        0.5f, -0.5f, 0.0f,
     };
 
     GLuint VAO; 
