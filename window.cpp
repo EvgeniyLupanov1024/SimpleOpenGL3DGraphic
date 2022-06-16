@@ -20,7 +20,7 @@ void fillScene();
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
 GLFWwindow* window;
-int screenWidth = 700;
+int screenWidth = 1000;
 int screenHeight = 700;
 char title[] = "Potitle";
 
@@ -36,18 +36,9 @@ int main()
     GLint viewLoc = glGetUniformLocation(shProxy.Program, "view");
     GLint projLoc = glGetUniformLocation(shProxy.Program, "projection");
 
-    // glm::mat4 model = glm::mat4(1.f);
-    glm::mat4 model = glm::rotate(glm::mat4(1.f), glm::radians(-90.0f), glm::vec3(1.0f, 0.0f, 0.0f));
-
-    glm::mat4 view = glm::translate(glm::mat4(1.f), glm::vec3(0.0f, 0.0f, 0.0f));
-    
-    glm::mat4 projection = glm::mat4(1.f);
-    // glm::mat4 projection = glm::ortho(0.0f, 800.0f, 0.0f, 600.0f, 0.1f, 100.0f );
-    // glm::mat4 projection = glm::perspective(glm::radians(45.0f), (float)screenWidth/(float)screenHeight, 1.0f, 1000.0f);
-
-    cout << glm::to_string(model) << endl << endl;
-    cout << glm::to_string(view) << endl << endl;
-    cout << glm::to_string(projection) << endl << endl;
+    glm::mat4 model = glm::mat4(1.f);
+    glm::mat4 view = glm::translate(glm::mat4(1.f), glm::vec3(0.0f, 0.0f, -4.0f));
+    glm::mat4 projection = glm::perspective(glm::radians(35.0f), (float)screenWidth/(float)screenHeight, 0.1f, 1000.0f);
 
     while(!glfwWindowShouldClose(window))
     {

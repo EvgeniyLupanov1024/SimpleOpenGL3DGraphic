@@ -11,8 +11,6 @@ out vec3 Color;
 
 void main()
 {
-    vec4 transform = projection * view * model * vec4(position, 1.f); 
-
-    gl_Position = vec4(transform.xy, -transform.z, transform.w); // обратный порядок отрисовки
+    gl_Position = projection * view * model * vec4(position, 1.f);
     Color = color;
 }
