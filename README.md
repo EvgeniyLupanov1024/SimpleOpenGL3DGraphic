@@ -1,4 +1,4 @@
-<img alt="work in progress" src="https://raw.githubusercontent.com/LupanovEvgeniyHTML/LupanovEvgeniyHTML/main/img/work_in_progress.jpg"/>
+<img alt="work in progress" align="middle" width="30%" src="https://raw.githubusercontent.com/LupanovEvgeniyHTML/LupanovEvgeniyHTML/main/img/work_in_progress.jpg"/>
 
 ## Зависимости
 

@@ -8,6 +8,7 @@
 
 #include <glm/glm.hpp>
 #include <glm/gtc/type_ptr.hpp>
+#include <glm/gtx/string_cast.hpp>
 
 #include "shader.h"
 #include "camera.h"
@@ -22,6 +23,7 @@ GLFWwindow* window;
 int screenWidth = 1000;
 int screenHeight = 700;
 char title[] = "Potitle";
+bool keys[1024];
 
 Camera* camera;
 
@@ -46,6 +48,8 @@ int main()
     while(!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
+        glm::vec2 offset(keys[GLFW_KEY_UP] - keys[GLFW_KEY_DOWN], keys[GLFW_KEY_RIGHT] - keys[GLFW_KEY_LEFT]);
+        camera->update(offset);
 
         glClearColor(0.91f, 0.85f, 0.73f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -87,12 +91,12 @@ void init()
     glViewport(0, 0, screenWidth, screenHeight);
     glfwSetKeyCallback(window, key_callback);
 
+    glEnable(GL_DEPTH_TEST);
+
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
         throw runtime_error("GLEW not init");
     }
-
-    glEnable(GL_DEPTH_TEST);
 }
 
 void fillScene()
@@ -142,26 +146,16 @@ void fillScene()
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode)
 {
-    switch (key)
+    if(key == GLFW_KEY_ESCAPE && action == GLFW_PRESS) {
+        glfwSetWindowShouldClose(window, GL_TRUE);
+    }
+
+    if (key >= 0 && key < 1024)
     {
-        case GLFW_KEY_ESCAPE:
-            glfwSetWindowShouldClose(window, GL_TRUE);
-            break;
-
-        case GLFW_KEY_UP:
-            camera->position.y -= 0.1f;
-            break;
-
-        case GLFW_KEY_DOWN:
-            camera->position.y += 0.1f;
-            break;
-
-        case GLFW_KEY_LEFT:
-            camera->position.x += 0.1f;
-            break;
-
-        case GLFW_KEY_RIGHT:
-            camera->position.x -= 0.1f;
-            break;
+        if(action == GLFW_PRESS) {
+            keys[key] = true;
+        } else if (action == GLFW_RELEASE) {
+            keys[key] = false;	
+        }
     }
 }
