@@ -7,11 +7,10 @@
 #include <GLFW/glfw3.h>
 
 #include <glm/glm.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <glm/gtc/type_ptr.hpp>
-#include <glm/gtx/string_cast.hpp>
 
 #include "shader.h"
+#include "camera.h"
 
 using namespace std;
 
@@ -32,12 +31,14 @@ int main()
 
     fillScene();
 
+    Camera camera(glm::vec3(0.5f, 0.5f, -4.0f));
+
     GLint modelLoc = glGetUniformLocation(shProxy.Program, "model");
     GLint viewLoc = glGetUniformLocation(shProxy.Program, "view");
     GLint projLoc = glGetUniformLocation(shProxy.Program, "projection");
 
     glm::mat4 model = glm::mat4(1.f);
-    glm::mat4 view = glm::translate(glm::mat4(1.f), glm::vec3(0.0f, 0.0f, -4.0f));
+    glm::mat4 view = glm::mat4(1.f);
     glm::mat4 projection = glm::perspective(glm::radians(35.0f), (float)screenWidth/(float)screenHeight, 0.1f, 1000.0f);
 
     while(!glfwWindowShouldClose(window))
@@ -49,7 +50,7 @@ int main()
 
         shProxy.use();
 
-        model = glm::rotate(glm::mat4(1.f), (GLfloat)glfwGetTime() * 1.f, glm::vec3(1.0f, 0.7f, 0.3f));
+        view = camera.getViewMatrix();
 
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
