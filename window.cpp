@@ -23,6 +23,8 @@ int screenWidth = 1000;
 int screenHeight = 700;
 char title[] = "Potitle";
 
+Camera* camera;
+
 int main()
 {
     init();
@@ -31,7 +33,7 @@ int main()
 
     fillScene();
 
-    Camera camera(glm::vec3(0.5f, 0.5f, -4.0f));
+    camera = new Camera(glm::vec3(0.5f, 0.5f, -4.0f));
 
     GLint modelLoc = glGetUniformLocation(shProxy.Program, "model");
     GLint viewLoc = glGetUniformLocation(shProxy.Program, "view");
@@ -50,7 +52,7 @@ int main()
 
         shProxy.use();
 
-        view = camera.getViewMatrix();
+        view = camera->getViewMatrix();
 
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
@@ -144,5 +146,22 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
     {
         case GLFW_KEY_ESCAPE:
             glfwSetWindowShouldClose(window, GL_TRUE);
+            break;
+
+        case GLFW_KEY_UP:
+            camera->position.y -= 0.1f;
+            break;
+
+        case GLFW_KEY_DOWN:
+            camera->position.y += 0.1f;
+            break;
+
+        case GLFW_KEY_LEFT:
+            camera->position.x += 0.1f;
+            break;
+
+        case GLFW_KEY_RIGHT:
+            camera->position.x -= 0.1f;
+            break;
     }
 }
