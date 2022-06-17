@@ -28,6 +28,7 @@ class Camera
 
     private:
         void updateDirection();
+        bool wasOffset;
 };
 
 #endif

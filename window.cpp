@@ -25,6 +25,7 @@ char title[] = "Potitle";
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
+
 bool keys[1024];
 glm::vec2 mouseLastPosition(0.0f); 
 glm::vec2 mouseDelta(0.0f); 
@@ -42,7 +43,7 @@ int main()
 
     fillScene();
 
-    camera = new Camera(glm::vec3(-5.0f, 0.0f, 0.0f));
+    camera = new Camera(glm::vec3(-5.0f, 0.0f, 1.0f));
 
     GLint modelLoc = glGetUniformLocation(shProxy.Program, "model");
     GLint viewLoc = glGetUniformLocation(shProxy.Program, "view");
@@ -69,8 +70,16 @@ int main()
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
         
-        glDrawArrays(GL_TRIANGLES, 0, 18);
-
+        for (GLfloat i_ill = 0.0f; i_ill < 10.0f; ++i_ill)
+        {
+            for (GLfloat j_ill = 0.0f; j_ill < 10.0f; ++j_ill)
+            {
+                model = glm::translate(glm::mat4(1.f), glm::vec3(i_ill * 10.0f - 50.0f, j_ill * 10.0f - 50.0f, 0.0f));
+                glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+                glDrawArrays(GL_TRIANGLES, 0, 18);
+            }
+        }
+        
         glfwSwapBuffers(window);
     }
 
@@ -174,17 +183,20 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 void mouse_callback(GLFWwindow* window, double xpos, double ypos)
 {
     glm::vec2 mouseNowPosition(xpos, ypos);
-    
-    mouseDelta = mouseNowPosition - mouseLastPosition;
 
-    mouseLastPosition = mouseNowPosition;
+    if (mouseLastPosition == glm::vec2(0.f)) { // как установить курсор в нулевые координаты
+        mouseLastPosition = mouseNowPosition;
+    }
+
+    mouseDelta = mouseNowPosition - mouseLastPosition;
+    mouseLastPosition = mouseNowPosition;   
 }
 
 void updateOffsetPosition()
 {
     offsetPosition = glm::vec3(
-        (keys[GLFW_KEY_UP] | keys[GLFW_KEY_W]) - (keys[GLFW_KEY_DOWN] | keys[GLFW_KEY_S]), 
-        (keys[GLFW_KEY_LEFT] | keys[GLFW_KEY_A]) - (keys[GLFW_KEY_RIGHT] | keys[GLFW_KEY_D]), 
+        (keys[GLFW_KEY_UP] || keys[GLFW_KEY_W]) - (keys[GLFW_KEY_DOWN] || keys[GLFW_KEY_S]), 
+        (keys[GLFW_KEY_LEFT] || keys[GLFW_KEY_A]) - (keys[GLFW_KEY_RIGHT] || keys[GLFW_KEY_D]), 
         keys[GLFW_KEY_SPACE] - keys[GLFW_KEY_LEFT_CONTROL]
     );
 }

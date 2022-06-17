@@ -19,15 +19,30 @@ glm::mat4 Camera::getViewMatrix()
 void Camera::update(glm::vec3 offsetPosition, glm::vec2 offsetDirection)
 {
     if (offsetPosition.x || offsetPosition.y || offsetPosition.z) {
-        offsetPosition = glm::normalize(offsetPosition);
-        position += offsetPosition * speedMovement;
+
+        offsetPosition = glm::normalize(offsetPosition) * speedMovement;
+        
+        position.x += offsetPosition.x * cos(angles.x) - offsetPosition.y * sin(angles.x);
+        position.y += offsetPosition.y * cos(angles.x) + offsetPosition.x * sin(angles.x);
+        position.z += offsetPosition.z;
+
+        wasOffset = true;
     }
 
-    offsetDirection *= speedRotstion;
-    angles.x -= offsetDirection.x;
-    angles.y -= offsetDirection.y;
+    if (offsetDirection.x || offsetDirection.y) {
 
-    updateDirection();
+        offsetDirection *= speedRotstion;
+        angles.x -= offsetDirection.x;
+        angles.y -= offsetDirection.y;
+
+        wasOffset = true;
+    }
+
+    if (wasOffset) {
+    
+        updateDirection();
+        wasOffset = false;
+    }
 }
 
 void Camera::updateDirection()
