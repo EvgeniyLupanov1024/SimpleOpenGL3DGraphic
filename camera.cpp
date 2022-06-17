@@ -3,32 +3,39 @@
 Camera::Camera(glm::vec3 position)
 {
     this->position = position;
-    this->target = glm::vec3(0.f, 0.f, 0.f);
+    this->angles = glm::vec3(0.0f, 0.0f, 0.0f);
+
+    this->speedMovement = 0.1f;
+    this->speedRotstion = 0.005f;
 
     this->updateDirection();
-
-    this->speedMovement = 0.15f;
 }
 
 glm::mat4 Camera::getViewMatrix()
 {
-    return glm::lookAt(position, target, directionUp);
+    return glm::lookAt(position, position + directionFront, directionUp);
 }
 
-void Camera::update(glm::vec3 offsetPosition)
+void Camera::update(glm::vec3 offsetPosition, glm::vec2 offsetDirection)
 {
     if (offsetPosition.x || offsetPosition.y || offsetPosition.z) {
         offsetPosition = glm::normalize(offsetPosition);
+        position += offsetPosition * speedMovement;
     }
 
-    position += offsetPosition * speedMovement;
+    offsetDirection *= speedRotstion;
+    angles.x -= offsetDirection.x;
+    angles.y -= offsetDirection.y;
 
-    this->updateDirection();
+    updateDirection();
 }
 
 void Camera::updateDirection()
 {
-    this->directionFront = glm::normalize(this->position - this->target);
-    this->directionRight = glm::cross(glm::vec3(0.0f, 0.0f, -1.0f), this->directionFront);
-    this->directionUp = glm::cross(this->directionRight, this->directionFront);
+    directionFront.x = cos(angles.x) * cos(angles.y);
+    directionFront.y = sin(angles.x);
+    directionFront.z = sin(angles.y);
+
+    directionRight = glm::cross(glm::vec3(0.0f, 0.0f, -1.0f), directionFront);
+    directionUp = glm::cross(directionRight, directionFront);
 }

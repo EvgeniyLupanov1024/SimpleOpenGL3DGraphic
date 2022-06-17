@@ -14,16 +14,17 @@ class Camera
 {
     public:
         glm::vec3 position;
-        glm::vec3 target;
+        glm::vec3 angles;
         glm::vec3 directionFront;
         glm::vec3 directionUp;
         glm::vec3 directionRight;
 
         GLfloat speedMovement;
+        GLfloat speedRotstion;
 
         Camera(glm::vec3 position);
         glm::mat4 getViewMatrix();
-        void update(glm::vec3 offsetPosition);
+        void update(glm::vec3 offsetPosition, glm::vec2 offsetDirection);
 
     private:
         void updateDirection();

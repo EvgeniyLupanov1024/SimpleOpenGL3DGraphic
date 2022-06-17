@@ -17,15 +17,19 @@ using namespace std;
 
 void init();
 void fillScene();
-void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
-void updateOffset();
 
 GLFWwindow* window;
 int screenWidth = 1000;
 int screenHeight = 700;
 char title[] = "Potitle";
 
+void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
+void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 bool keys[1024];
+glm::vec2 mouseLastPosition(0.0f); 
+glm::vec2 mouseDelta(0.0f); 
+
+void updateOffsetPosition();
 glm::vec3 offsetPosition;
 
 Camera* camera;
@@ -38,7 +42,7 @@ int main()
 
     fillScene();
 
-    camera = new Camera(glm::vec3(5.0f, 5.0f, 5.0f));
+    camera = new Camera(glm::vec3(-5.0f, 0.0f, 0.0f));
 
     GLint modelLoc = glGetUniformLocation(shProxy.Program, "model");
     GLint viewLoc = glGetUniformLocation(shProxy.Program, "view");
@@ -51,7 +55,8 @@ int main()
     while(!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
-        camera->update(offsetPosition);
+        camera->update(offsetPosition, mouseDelta);
+        mouseDelta = glm::vec2(0.0f);
 
         glClearColor(0.91f, 0.85f, 0.73f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -89,11 +94,13 @@ void init()
         throw runtime_error("Failed to create GLFW window");
     }
     glfwMakeContextCurrent(window);
-
     glViewport(0, 0, screenWidth, screenHeight);
-    glfwSetKeyCallback(window, key_callback);
 
     glEnable(GL_DEPTH_TEST);
+
+    glfwSetKeyCallback(window, key_callback);
+    glfwSetCursorPosCallback(window, mouse_callback);
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 
     glewExperimental = GL_TRUE;
     if (glewInit() != GLEW_OK) {
@@ -159,16 +166,25 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
         } else if (action == GLFW_RELEASE) {
             keys[key] = false;	
         }
-    }
 
-    updateOffset();
+        updateOffsetPosition();
+    }
 }
 
-void updateOffset()
+void mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    glm::vec2 mouseNowPosition(xpos, ypos);
+    
+    mouseDelta = mouseNowPosition - mouseLastPosition;
+
+    mouseLastPosition = mouseNowPosition;
+}
+
+void updateOffsetPosition()
 {
     offsetPosition = glm::vec3(
-        keys[GLFW_KEY_UP] - keys[GLFW_KEY_DOWN], 
-        keys[GLFW_KEY_RIGHT] - keys[GLFW_KEY_LEFT], 
+        (keys[GLFW_KEY_UP] | keys[GLFW_KEY_W]) - (keys[GLFW_KEY_DOWN] | keys[GLFW_KEY_S]), 
+        (keys[GLFW_KEY_LEFT] | keys[GLFW_KEY_A]) - (keys[GLFW_KEY_RIGHT] | keys[GLFW_KEY_D]), 
         keys[GLFW_KEY_SPACE] - keys[GLFW_KEY_LEFT_CONTROL]
     );
 }
