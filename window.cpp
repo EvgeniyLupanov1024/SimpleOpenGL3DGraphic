@@ -18,12 +18,15 @@ using namespace std;
 void init();
 void fillScene();
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
+void updateOffset();
 
 GLFWwindow* window;
 int screenWidth = 1000;
 int screenHeight = 700;
 char title[] = "Potitle";
+
 bool keys[1024];
+glm::vec3 offsetPosition;
 
 Camera* camera;
 
@@ -48,8 +51,7 @@ int main()
     while(!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
-        glm::vec2 offset(keys[GLFW_KEY_UP] - keys[GLFW_KEY_DOWN], keys[GLFW_KEY_RIGHT] - keys[GLFW_KEY_LEFT]);
-        camera->update(offset);
+        camera->update(offsetPosition);
 
         glClearColor(0.91f, 0.85f, 0.73f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -158,4 +160,15 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
             keys[key] = false;	
         }
     }
+
+    updateOffset();
+}
+
+void updateOffset()
+{
+    offsetPosition = glm::vec3(
+        keys[GLFW_KEY_UP] - keys[GLFW_KEY_DOWN], 
+        keys[GLFW_KEY_RIGHT] - keys[GLFW_KEY_LEFT], 
+        keys[GLFW_KEY_SPACE] - keys[GLFW_KEY_LEFT_CONTROL]
+    );
 }

@@ -7,7 +7,7 @@ Camera::Camera(glm::vec3 position)
 
     this->updateDirection();
 
-    this->speedMovement = 0.05;
+    this->speedMovement = 0.15f;
 }
 
 glm::mat4 Camera::getViewMatrix()
@@ -15,14 +15,13 @@ glm::mat4 Camera::getViewMatrix()
     return glm::lookAt(position, target, directionUp);
 }
 
-void Camera::update(glm::vec2 offset)
+void Camera::update(glm::vec3 offsetPosition)
 {
-    if (offset.x || offset.y) {
-        offset = glm::normalize(offset);
+    if (offsetPosition.x || offsetPosition.y || offsetPosition.z) {
+        offsetPosition = glm::normalize(offsetPosition);
     }
 
-    position.x += offset.x * speedMovement;
-    position.y += offset.y * speedMovement;
+    position += offsetPosition * speedMovement;
 
     this->updateDirection();
 }

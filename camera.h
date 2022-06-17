@@ -23,7 +23,7 @@ class Camera
 
         Camera(glm::vec3 position);
         glm::mat4 getViewMatrix();
-        void update(glm::vec2 offset);
+        void update(glm::vec3 offsetPosition);
 
     private:
         void updateDirection();
