@@ -3,13 +3,16 @@
 Camera::Camera(glm::vec3 position)
 {
     this->position = position;
+    this->target = glm::vec3(0.f, 0.f, 0.f);
+
+    this->updateDirection();
 
     this->speedMovement = 0.05;
 }
 
 glm::mat4 Camera::getViewMatrix()
 {
-    return glm::translate(glm::mat4(1.f), position);
+    return glm::lookAt(position, target, directionUp);
 }
 
 void Camera::update(glm::vec2 offset)
@@ -20,4 +23,13 @@ void Camera::update(glm::vec2 offset)
 
     position.x += offset.x * speedMovement;
     position.y += offset.y * speedMovement;
+
+    this->updateDirection();
+}
+
+void Camera::updateDirection()
+{
+    this->directionFront = glm::normalize(this->position - this->target);
+    this->directionRight = glm::cross(glm::vec3(0.0f, 0.0f, -1.0f), this->directionFront);
+    this->directionUp = glm::cross(this->directionRight, this->directionFront);
 }

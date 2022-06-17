@@ -35,7 +35,7 @@ int main()
 
     fillScene();
 
-    camera = new Camera(glm::vec3(0.5f, 0.5f, -4.0f));
+    camera = new Camera(glm::vec3(5.0f, 5.0f, 5.0f));
 
     GLint modelLoc = glGetUniformLocation(shProxy.Program, "model");
     GLint viewLoc = glGetUniformLocation(shProxy.Program, "view");
