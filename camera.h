@@ -19,8 +19,13 @@ class Camera
         glm::vec3 directionUp;
         glm::vec3 directionRight;
 
-        GLfloat speedMovement;
-        GLfloat speedRotstion;
+        glm::vec3 speedMovement;
+        glm::vec3 speedRotation;
+
+        GLfloat mass;
+        GLfloat resistanceMovement;
+        GLfloat momentInertia;
+        GLfloat resistanceRotation;
 
         Camera(glm::vec3 position);
         glm::mat4 getViewMatrix();
@@ -28,7 +33,6 @@ class Camera
 
     private:
         void updateDirection();
-        bool wasOffset;
 };
 
 #endif

@@ -3,10 +3,15 @@
 Camera::Camera(glm::vec3 position)
 {
     this->position = position;
-    this->angles = glm::vec3(0.0f, 0.0f, 0.0f);
+    this->angles = glm::vec3(0.f);
 
-    this->speedMovement = 0.1f;
-    this->speedRotstion = 0.005f;
+    this->speedMovement = glm::vec3(0.f);
+    this->speedRotation = glm::vec3(0.f);
+
+    this->mass = 100.f;
+    this->resistanceMovement = 1.1f;
+    this->momentInertia = 1000.f;
+    this->resistanceRotation = 1.15f;
 
     this->updateDirection();
 }
@@ -20,35 +25,41 @@ void Camera::update(glm::vec3 offsetPosition, glm::vec2 offsetDirection)
 {
     if (offsetPosition.x || offsetPosition.y || offsetPosition.z) {
 
-        offsetPosition = glm::normalize(offsetPosition) * speedMovement;
+        offsetPosition = glm::normalize(offsetPosition) / mass;
         
-        position.x += offsetPosition.x * cos(angles.x) - offsetPosition.y * sin(angles.x);
-        position.y += offsetPosition.y * cos(angles.x) + offsetPosition.x * sin(angles.x);
-        position.z += offsetPosition.z;
-
-        wasOffset = true;
+        speedMovement.x += offsetPosition.x * cos(angles.x) - offsetPosition.y * sin(angles.x);
+        speedMovement.y += offsetPosition.y * cos(angles.x) + offsetPosition.x * sin(angles.x);
+        speedMovement.z += offsetPosition.z;
     }
 
     if (offsetDirection.x || offsetDirection.y) {
 
-        offsetDirection *= speedRotstion;
-        angles.x -= offsetDirection.x;
-        angles.y -= offsetDirection.y;
+        offsetDirection /= 1000.f;
 
-        wasOffset = true;
+        speedRotation.x -= offsetDirection.x;
+        speedRotation.y -= offsetDirection.y;
     }
 
-    if (wasOffset) {
-    
-        updateDirection();
-        wasOffset = false;
+    speedMovement /= resistanceMovement;
+    speedRotation /= resistanceRotation;
+
+    position += speedMovement;
+    angles += speedRotation;
+
+    if (angles.y > glm::radians(89.9f)) {
+        angles.y = glm::radians(89.9f);
+
+    } else if (angles.y < glm::radians(-89.9f)) {
+        angles.y = glm::radians(-89.9f);
     }
+
+    updateDirection();
 }
 
 void Camera::updateDirection()
 {
     directionFront.x = cos(angles.x) * cos(angles.y);
-    directionFront.y = sin(angles.x);
+    directionFront.y = sin(angles.x) * cos(angles.y);
     directionFront.z = sin(angles.y);
 
     directionRight = glm::cross(glm::vec3(0.0f, 0.0f, -1.0f), directionFront);

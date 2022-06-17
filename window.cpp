@@ -19,9 +19,9 @@ void init();
 void fillScene();
 
 GLFWwindow* window;
-int screenWidth = 1000;
-int screenHeight = 700;
-char title[] = "Potitle";
+int screenWidth = 1500;
+int screenHeight = 900;
+string title = "Potitle";
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 void mouse_callback(GLFWwindow* window, double xpos, double ypos);
@@ -51,36 +51,40 @@ int main()
 
     glm::mat4 model = glm::mat4(1.f);
     glm::mat4 view = glm::mat4(1.f);
-    glm::mat4 projection = glm::perspective(glm::radians(35.0f), (float)screenWidth/(float)screenHeight, 0.1f, 1000.0f);
+    glm::mat4 projection = glm::perspective(glm::radians(55.0f), (float)screenWidth/(float)screenHeight, 0.1f, 1000.0f);
 
     while(!glfwWindowShouldClose(window))
     {
         glfwPollEvents();
         camera->update(offsetPosition, mouseDelta);
-        mouseDelta = glm::vec2(0.0f);
 
         glClearColor(0.91f, 0.85f, 0.73f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         shProxy.use();
 
+        for (int i_ill = 0; i_ill < 10; ++i_ill)
+        {
+            for (int j_ill = 0; j_ill < 10; ++j_ill)
+            {
+                for (int g_ill = 0; g_ill < 5; ++g_ill)
+                {
+                    model = glm::translate(glm::mat4(1.f), glm::vec3(i_ill * 10 - 50, j_ill * 10 - 50, g_ill * 20 - 40));
+                    glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
+                    glDrawArrays(GL_TRIANGLES, 0, 18);
+                }
+            }
+        }
+
         view = camera->getViewMatrix();
 
         glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
         glUniformMatrix4fv(viewLoc, 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(projLoc, 1, GL_FALSE, glm::value_ptr(projection));
-        
-        for (GLfloat i_ill = 0.0f; i_ill < 10.0f; ++i_ill)
-        {
-            for (GLfloat j_ill = 0.0f; j_ill < 10.0f; ++j_ill)
-            {
-                model = glm::translate(glm::mat4(1.f), glm::vec3(i_ill * 10.0f - 50.0f, j_ill * 10.0f - 50.0f, 0.0f));
-                glUniformMatrix4fv(modelLoc, 1, GL_FALSE, glm::value_ptr(model));
-                glDrawArrays(GL_TRIANGLES, 0, 18);
-            }
-        }
-        
+
         glfwSwapBuffers(window);
+        
+        mouseDelta = glm::vec2(0.0f);
     }
 
     glfwTerminate();
@@ -98,7 +102,7 @@ void init()
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
 
-    window = glfwCreateWindow(screenWidth, screenHeight, title, nullptr, nullptr);
+    window = glfwCreateWindow(screenWidth, screenHeight, title.c_str(), nullptr, nullptr);
     if (window == nullptr) {
         throw runtime_error("Failed to create GLFW window");
     }
@@ -128,21 +132,21 @@ void fillScene()
         0.0f,   0.0f,   0.6f,   0.9f,   0.6f,   0.3f,
         0.5f,   0.5f,   0.0f,   0.9f,   0.6f,   0.3f,
 
-        0.5f,   0.5f,   0.0f,   0.3f,   0.6f,   0.4f,
-        0.0f,   0.0f,   0.6f,   0.3f,   0.6f,   0.4f,
-        -0.5f,  0.5f,   0.0f,   0.3f,   0.6f,   0.4f,
-
-        -0.5f,  0.5f,   0.0f,   0.7f,   0.8f,   0.4f,
+        0.5f,   0.5f,   0.0f,   0.7f,   0.8f,   0.4f,
         0.0f,   0.0f,   0.6f,   0.7f,   0.8f,   0.4f,
-        -0.5f,  -0.5f,  0.0f,   0.7f,   0.8f,   0.4f,
+        -0.5f,  0.5f,   0.0f,   0.7f,   0.8f,   0.4f,
 
-        -0.5f,  -0.5f,  0.0f,   0.5f,   0.2f,   0.9f,
-        0.5f,   -0.5f,  0.0f,   0.5f,   0.2f,   0.9f,
-        0.5f,   0.5f,   0.0f,   0.5f,   0.2f,   0.9f,
+        -0.5f,  0.5f,   0.0f,   0.3f,   0.6f,   0.4f,
+        0.0f,   0.0f,   0.6f,   0.3f,   0.6f,   0.4f,
+        -0.5f,  -0.5f,  0.0f,   0.3f,   0.6f,   0.4f,
 
-        -0.5f,  -0.5f,  0.0f,   0.5f,   0.2f,   0.9f,
-        -0.5f,  0.5f,   0.0f,   0.5f,   0.2f,   0.9f,
-        0.5f,   0.5f,   0.0f,   0.5f,   0.2f,   0.9f,
+        -0.5f,  -0.5f,  0.0f,   0.4f,   0.1f,   0.8f,
+        0.5f,   -0.5f,  0.0f,   0.4f,   0.1f,   0.8f,
+        0.5f,   0.5f,   0.0f,   0.4f,   0.1f,   0.8f,
+
+        -0.5f,  -0.5f,  0.0f,   0.4f,   0.1f,   0.8f,
+        -0.5f,  0.5f,   0.0f,   0.4f,   0.1f,   0.8f,
+        0.5f,   0.5f,   0.0f,   0.4f,   0.1f,   0.8f,
     };
 
     GLuint VAO; 
