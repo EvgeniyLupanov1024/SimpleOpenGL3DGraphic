@@ -1,5 +1,5 @@
-<img alt="illuminati" align="middle" width="100%" src="https://raw.githubusercontent.com/LupanovEvgeniyHTML/LupanovEvgeniyHTML/main/projects_media/SimpleOpenGL3DGraphic/iluminat_1_far.gif"/>
 <img alt="illuminati" align="middle" width="100%" src="https://raw.githubusercontent.com/LupanovEvgeniyHTML/LupanovEvgeniyHTML/main/projects_media/SimpleOpenGL3DGraphic/iluminat_1_close.gif"/>
+<img alt="illuminati" align="middle" width="100%" src="https://raw.githubusercontent.com/LupanovEvgeniyHTML/LupanovEvgeniyHTML/main/projects_media/SimpleOpenGL3DGraphic/iluminat_1_far.gif"/>
 
 ## Зависимости
 
